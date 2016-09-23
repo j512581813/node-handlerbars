@@ -1,0 +1,1 @@
+this is the simple node and handlerbars app.
