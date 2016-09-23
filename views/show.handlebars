@@ -1,0 +1,19 @@
+<div class="container">
+	{{#each content.locations}}
+		<div class="locations">
+			<h3>{{name}}</h3>
+			<a href="{{forecastUrl}}">
+				<img src="{{iconUrl}}" alt="{{weather}}">
+				 {{weather}}, {{temp}}
+			</a>
+		 </div>
+	{{/each}} 
+</div>
+
+<div class="images">
+	<ul>
+		{{#each image.imgs}}
+			<li id="{{id}}"><div class="li_img"><img src="{{url}}"></div><div class="li_intro">{{title}}</div></li>
+		{{/each}} 
+	</ul>
+</div>
