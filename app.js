@@ -43,8 +43,9 @@ app.get('/show',function(req,res){
 	 	// if(!res.locals.images.imgs){
 	 	// 	res.locals.images.imgs = localStorage.getItem('data');
 	 	// }  
+	 	res.render('show',{content:res.locals.partials.weather,image:res.locals.images});
 	});
-	res.render('show',{content:res.locals.partials.weather,image:res.locals.images});
+	
 })
 app.use(function(req,res,next){
 	res.status(404);
