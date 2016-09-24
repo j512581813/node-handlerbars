@@ -6,18 +6,24 @@ var settings = require('./js/config');
 var data = require('./lib/data');
 var LocalStorage = require('node-localstorage').LocalStorage;
 var localStorage = LocalStorage('./scratch', Number.MAX_VALUE);
+var bodyParser = require('body-parser');
+var path = require('path');
+
+  
+app.use(bodyParser.json());  
+app.use(bodyParser.urlencoded({ extended: false }))
 
 var handlebars = require('express3-handlebars').create({ defaultLayout:'main' });// 设置默认布局为main
 
 app.set('port',process.env.PORT||3000);  //设置端口号
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/public')); //设置静态目录的入口
 
 
 app.engine('handlebars',handlebars.engine);// 将express模板引擎配置成handlebars
 app.set('view engine', 'handlebars');
 
 app.set('view cache', true);  //设置缓存
-
+app.set('views', path.join(__dirname, 'views'));
 
 app.get('/',function(req,res){
 	res.render('home',{words:words.getFortune()});
@@ -45,19 +51,39 @@ app.get('/show',function(req,res){
 	 	// }  
 	 	res.render('show',{content:res.locals.partials.weather,image:res.locals.images});
 	});
-	
+});
+
+app.use('/login',function(req,res){
+	if (!req.body) return res.sendStatus(400);
+	var username = req.body.username;
+	var password = req.body.password;
+	console.log(username)
+	var conn = mysql.createConnection(settings.db);
+	if(username&&password){
+		console.log(222222);
+		conn.query("select count(*) as count from user WHERE username='"+username +"'", function(err, datas) {
+			if (err) throw err;
+			if(datas[0].count ===1){
+				//title = "这是登陆界面！";
+				console.log("select success")
+				res.send('hello'+req.body.username);
+			}else{
+				res.send("error",{error:"您输入的用户名或密码有误！"});
+			}
+			res.render('login');
+		});
+  	}
 })
 app.use(function(req,res,next){
 	res.status(404);
 	res.render('404');
-	next();
 });
 
 app.use(function(req,res,next){
 	console.error(err.stack);
 	res.status(500);
 	res.render('500');
-	next();
+
 });
 app.use(function(req, res, next){ 
 	console.log(res);
