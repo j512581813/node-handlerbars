@@ -1,2 +1,0 @@
-# node-handlerbars
-node   handlerbars
